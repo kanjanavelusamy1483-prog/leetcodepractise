@@ -1,0 +1,51 @@
+class Solution:
+    def fullJustify(self, words: list[str], maxWidth: int) -> list[str]:
+        result = []
+        i = 0
+
+        while i < len(words):
+            line = []
+            line_length = 0
+
+            # Find words that can fit in this line
+            while i < len(words):
+                word_length = len(words[i])
+
+                if line_length + word_length + len(line) > maxWidth:
+                    break
+
+                line.append(words[i])
+                line_length += word_length
+                i += 1
+
+            # Last line
+            if i == len(words):
+                line_text = " ".join(line)
+                line_text += " " * (maxWidth - len(line_text))
+                result.append(line_text)
+                break
+
+            # Only one word
+            if len(line) == 1:
+                line_text = line[0] + " " * (maxWidth - len(line[0]))
+                result.append(line_text)
+                continue
+
+            # Distribute spaces
+            total_spaces = maxWidth - line_length
+            gaps = len(line) - 1
+
+            space = total_spaces // gaps
+            extra = total_spaces % gaps
+
+            line_text = ""
+
+            for j in range(gaps):
+                line_text += line[j]
+                line_text += " " * (space + (1 if j < extra else 0))
+
+            line_text += line[-1]
+
+            result.append(line_text)
+
+        return result
